@@ -1,0 +1,85 @@
+#!/bin/bash
+
+# Check if the current directory is a Git repository
+if ! git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
+  echo "Error: Not inside a Git repository." >&2
+  exit 1
+fi
+
+# Defaults
+comment="last update"
+remote="origin"
+branch=""
+set_upstream=0
+
+usage() {
+  cat >&2 <<EOF
+Usage: $(basename "$0") [-c commit_message] [-b branch] [-r remote] [-u]
+  -c  Commit message (default: "last update")
+  -b  Branch to push to (default: current branch)
+  -r  Remote to push to (default: origin)
+  -u  Set upstream on push (git push -u)
+  -h  Show this help
+EOF
+}
+
+# Parse command-line options
+while getopts ":c:b:r:uh" opt; do
+  case $opt in
+    c) comment="$OPTARG" ;;
+    b) branch="$OPTARG" ;;
+    r) remote="$OPTARG" ;;
+    u) set_upstream=1 ;;
+    h) usage; exit 0 ;;
+    :) echo "Option -$OPTARG requires an argument." >&2; usage; exit 1 ;;
+    \?) echo "Invalid option: -$OPTARG" >&2; usage; exit 1 ;;
+  esac
+done
+
+# Shift past the options
+shift $((OPTIND - 1))
+
+# Check for unexpected arguments
+if [ $# -gt 0 ]; then
+  echo "Error: Unexpected arguments: $@" >&2
+  exit 1
+fi
+
+# If no branch was supplied, use the currently checked-out branch
+if [ -z "$branch" ]; then
+  branch="$(git rev-parse --abbrev-ref HEAD)"
+  if [ "$branch" = "HEAD" ]; then
+    echo "Error: detached HEAD; specify a branch with -b." >&2
+    exit 1
+  fi
+fi
+
+# Verify the remote exists
+if ! git remote get-url "$remote" > /dev/null 2>&1; then
+  echo "Error: remote '$remote' does not exist." >&2
+  exit 1
+fi
+
+# Check if there are any changes to commit
+if [ -z "$(git status --porcelain)" ]; then
+  echo "No changes to commit."
+  exit 0
+fi
+
+# Stage, commit, push
+git add .
+
+if ! git commit -m "$comment"; then
+  echo "Error: Failed to commit changes." >&2
+  exit 1
+fi
+
+push_args=("$remote" "$branch")
+if [ "$set_upstream" -eq 1 ]; then
+  push_args=(-u "${push_args[@]}")
+fi
+
+if ! git push "${push_args[@]}"; then
+  echo "Error: Failed to push changes to $remote/$branch." >&2
+  exit 1
+fi
