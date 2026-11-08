@@ -1,0 +1,31 @@
+  <mat-sidenav-container class="app-shell" [class.mini-sidebar]="sidebarCollapsed && !isMobile" [class.mobile-layout]="isMobile">
+    <mat-sidenav class="sidebar" [mode]="isMobile ? 'over' : 'side'" [opened]="isMobile ? mobileMenuOpen : true" [disableClose]="!isMobile" (closedStart)="mobileMenuOpen = false" [fixedInViewport]="isMobile" aria-label="Main navigation">
+      <div class="brand"><span class="brand-mark">MM</span>
+        @if (isMobile) { <button mat-icon-button class="mobile-close" (click)="mobileMenuOpen = false" aria-label="Close navigation"><mat-icon>close</mat-icon></button> }
+      </div>
+      <div class="sidebar-title">Management System</div>
+      <nav class="nav-items" aria-label="Main menu">
+        @for (item of navItems; track item.path) {
+          <a mat-button class="nav-item" [routerLink]="item.path" routerLinkActive="active"
+             [routerLinkActiveOptions]="{ exact: true }" ariaCurrentWhenActive="page"
+             [attr.aria-label]="item.title" (click)="onNavigate()">
+            <mat-icon>{{ item.icon }}</mat-icon><span class="nav-label">{{ item.title }}</span>
+          </a>
+        }
+      </nav>
+    </mat-sidenav>
+    <mat-sidenav-content class="main-shell">
+      <mat-toolbar class="topbar">
+        <button mat-icon-button class="menu-toggle" (click)="toggleSidebar()" [attr.aria-label]="isMobile ? (mobileMenuOpen ? 'Close menu' : 'Open menu') : (sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar')">
+          <mat-icon>{{ isMobile ? 'menu' : (sidebarCollapsed ? 'menu_open' : 'chevron_left') }}</mat-icon>
+        </button>
+        <span class="toolbar-spacer"></span>
+        <button mat-icon-button class="profile-trigger" [matMenuTriggerFor]="accountMenu" aria-label="Account menu"><mat-icon>account_circle</mat-icon></button>
+        <mat-menu #accountMenu="matMenu" xPosition="before">
+          <button mat-menu-item routerLink="/profile" (click)="onNavigate()"><mat-icon>person</mat-icon><span>Profile</span></button>
+          <button mat-menu-item (click)="logout()"><mat-icon>logout</mat-icon><span>Log Out</span></button>
+        </mat-menu>
+      </mat-toolbar>
+      <main class="workspace"><router-outlet></router-outlet></main>
+    </mat-sidenav-content>
+  </mat-sidenav-container>

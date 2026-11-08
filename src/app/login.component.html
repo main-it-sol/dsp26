@@ -1,0 +1,10 @@
+<main class="login-screen">
+    <form class="login-card" #loginForm="ngForm" (ngSubmit)="login(loginForm)">
+      <div class="brand-mark login-logo">MM</div>
+      <h1>Management System</h1>
+      <mat-form-field appearance="outline"><mat-label>Username</mat-label><mat-icon matPrefix>person</mat-icon><input matInput name="username" [(ngModel)]="username" autocomplete="username" required></mat-form-field>
+      <mat-form-field appearance="outline"><mat-label>Password</mat-label><mat-icon matPrefix>lock</mat-icon><input matInput name="password" [(ngModel)]="password" type="password" autocomplete="current-password" required></mat-form-field>
+      <button mat-flat-button class="primary-action login-button" type="submit" [disabled]="loginForm.invalid"><mat-icon>login</mat-icon>Log In</button>
+      <p class="login-note">Demo only: enter any username and password.</p>
+    </form>
+  </main>

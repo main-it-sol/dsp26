@@ -1,0 +1,26 @@
+<div class="report-toolbar">
+            <mat-form-field appearance="outline" subscriptSizing="dynamic" class="date-field"><mat-label>Enter Report Period</mat-label><input matInput type="date" [(ngModel)]="reportDate" aria-label="Report date"></mat-form-field>
+            <mat-checkbox [(ngModel)]="sourcesOnly" (change)="applyFilters()">Show only existing in Sources</mat-checkbox>
+            <button mat-flat-button class="primary-action" (click)="runReport()"><mat-icon>play_arrow</mat-icon>Run Report</button>
+            <button mat-button class="secondary-action" (click)="resetFilters()"><mat-icon>filter_alt_off</mat-icon>Reset all Filters</button>
+            <button mat-button class="secondary-action" (click)="exportCsv()"><mat-icon>file_download</mat-icon>Export to CSV</button>
+          </div>
+          <div class="table-scroll">
+            <table mat-table [dataSource]="filteredRows" class="report-table">
+              @for (column of columns; track column.key) {
+                <ng-container [matColumnDef]="column.key">
+                  <th mat-header-cell *matHeaderCellDef>
+                    <div class="column-heading">{{ column.label }}</div>
+                    <mat-form-field appearance="outline" subscriptSizing="dynamic" class="filter-field">
+                      <input matInput [attr.aria-label]="'Filter ' + column.label" [(ngModel)]="filters[column.key]" (ngModelChange)="applyFilters()" (click)="$event.stopPropagation()">
+                    </mat-form-field>
+                  </th>
+                  <td mat-cell *matCellDef="let row">{{ column.key === 'requests' || column.key === 'opportunities' ? (row[column.key] | number) : row[column.key] }}</td>
+                </ng-container>
+              }
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns" class="highlight-row"></tr>
+              <tr *matNoDataRow><td class="empty-row" [attr.colspan]="displayedColumns.length">No matching results</td></tr>
+            </table>
+          </div>
+          <p class="status" role="status" aria-live="polite">{{ reportStatus }}</p>
