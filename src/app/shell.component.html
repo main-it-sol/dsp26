@@ -1,4 +1,4 @@
-  <mat-sidenav-container class="app-shell" [class.mini-sidebar]="sidebarCollapsed && !isMobile" [class.mobile-layout]="isMobile">
+  <mat-sidenav-container autosize class="app-shell" [class.mini-sidebar]="sidebarCollapsed && !isMobile" [class.mobile-layout]="isMobile">
     <mat-sidenav class="sidebar" [mode]="isMobile ? 'over' : 'side'" [opened]="isMobile ? mobileMenuOpen : true" [disableClose]="!isMobile" (closedStart)="mobileMenuOpen = false" [fixedInViewport]="isMobile" aria-label="Main navigation">
       <div class="brand"><span class="brand-mark">MM</span>
         @if (isMobile) { <button mat-icon-button class="mobile-close" (click)="mobileMenuOpen = false" aria-label="Close navigation"><mat-icon>close</mat-icon></button> }
@@ -17,7 +17,7 @@
     <mat-sidenav-content class="main-shell">
       <mat-toolbar class="topbar">
         <button mat-icon-button class="menu-toggle" (click)="toggleSidebar()" [attr.aria-label]="isMobile ? (mobileMenuOpen ? 'Close menu' : 'Open menu') : (sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar')">
-          <mat-icon>{{ isMobile ? 'menu' : (sidebarCollapsed ? 'menu_open' : 'chevron_left') }}</mat-icon>
+          <mat-icon>{{ isMobile ? 'menu' : (sidebarCollapsed ? 'chevron_right' : 'chevron_left') }}</mat-icon>
         </button>
         <span class="toolbar-spacer"></span>
         <button mat-icon-button class="profile-trigger" [matMenuTriggerFor]="accountMenu" aria-label="Account menu"><mat-icon>account_circle</mat-icon></button>

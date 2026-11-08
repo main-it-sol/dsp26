@@ -1,6 +1,6 @@
 :host { display:block; min-height:100dvh; --sidebar-width:250px; --sidebar-mini:68px; --blue:#7082d0; --blue-dark:#4058b7; --active:#a3d5ff; color:#202531; }
 .app-shell { height:100dvh; background:#f7f8fb; }
-.sidebar { width:var(--sidebar-width); background:var(--blue); color:#fff; border-radius:0; transition:width .2s ease; }
+.sidebar { width:var(--sidebar-width); background:var(--blue); color:#fff; border-radius:0; }
 .brand { height:98px; display:flex; justify-content:center; align-items:flex-start; padding-top:18px; background:#00000008; position:relative; }
 .brand-mark { width:50px; height:50px; border-radius:50%; display:grid; place-items:center; background:#fff; color:#283b91; font-weight:800; font-size:21px; letter-spacing:-2px; }
 .sidebar-title { padding:33px 9px 21px; font-size:16px; white-space:nowrap; }
@@ -9,10 +9,30 @@
 .nav-item .mat-icon { margin:0 14px 0 0; flex-shrink:0; }
 .nav-item.active { background:var(--active); }
 .nav-label { white-space:nowrap; }
-.main-shell { min-width:0; }
-.topbar.mat-toolbar { height:60px; background:#f5f6f9; color:#252936; padding:0 24px 0 8px; }
+.main-shell { min-width:0; overflow:visible; }
+.app-shell:not(.mobile-layout) .main-shell { position:relative; z-index:2; }
+.topbar.mat-toolbar { overflow:visible; height:60px; background:#f5f6f9; color:#252936; padding:0 24px 0 8px; }
 .toolbar-spacer { flex:1; }
-.menu-toggle { color:var(--blue-dark); }
+.menu-toggle {
+  position:relative;
+  z-index:2;
+  flex-shrink:0;
+  margin-left:-34px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:0;
+  width:52px;
+  height:52px;
+  box-sizing:border-box;
+  border:2px solid #fff;
+  border-radius:50%;
+  background:var(--blue);
+  color:#fff;
+  box-shadow:0 0 0 2px #a3d5ff;
+}
+.menu-toggle .mat-icon { margin:0; }
+.mini-sidebar .menu-toggle { clip-path:inset(-4px -4px -4px 50%); }
 .profile-trigger { background:#626a70; color:#fff; border-radius:5px; width:50px; height:50px; }
 .workspace { padding:20px 18px; min-width:0; }
 .report-toolbar { display:flex; flex-wrap:wrap; align-items:center; gap:12px; padding-bottom:20px; }
@@ -52,7 +72,6 @@
   .report-toolbar { align-items:stretch; flex-direction:column; }
   .date-field { width:100%; }
 }
-@media (prefers-reduced-motion:reduce) { .sidebar { transition:none; } }
 
 .nav-item.active { color:#1c2a55; font-weight:600; }
 .nav-item { text-decoration:none; }
